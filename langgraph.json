@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "python": [
+      "-r",
+      "requirements.txt"
+    ]
+  },
+  "graphs": {
+    "business-mysql": {
+      "entrypoint": "graph:build_graph"
+    }
+  }
+}
+
