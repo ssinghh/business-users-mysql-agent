@@ -44,6 +44,8 @@ def planner_node(state: GraphState) -> GraphState:
         "5. Do not use multiple statements; output exactly one SQL statement.\n"
         "6. You MUST use column names exactly as written in the schema.\n"
         "7. Do NOT guess or rename column names.\n"
+        "8. For DML queries, fulfill user requirements. \n"
+        "9. MUST INCLUDE all the mandatory non null fields required by table schema during INSERT"
         )
     )
     

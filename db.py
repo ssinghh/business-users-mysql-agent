@@ -38,6 +38,9 @@ def mysql_cursor():
     try:
         yield cursor
         conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
     finally:
         try:
             cursor.close()
@@ -54,7 +57,7 @@ def fetch_schema_summary() -> str:
     with mysql_cursor() as cur:
         cur.execute(
             """
-            SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE
+            SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE, IS_NULLABLE
             FROM INFORMATION_SCHEMA.COLUMNS
             WHERE TABLE_SCHEMA = DATABASE()
             ORDER BY TABLE_NAME, ORDINAL_POSITION
@@ -64,11 +67,11 @@ def fetch_schema_summary() -> str:
 
     schema_lines: List[str] = []
     current_table: str | None = None
-    for table_name, column_name, data_type in rows:
+    for table_name, column_name, data_type, is_nullable in rows:
         if table_name != current_table:
             current_table = table_name
             schema_lines.append(f"\\nTable {table_name}:")
-        schema_lines.append(f"  - {column_name} ({data_type})")
+        schema_lines.append(f"  - {column_name} ({data_type} {is_nullable})")
 
     return "\\n".join(schema_lines).strip()
 
