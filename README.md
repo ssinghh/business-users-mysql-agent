@@ -56,13 +56,23 @@ For **INSERT/UPDATE/DELETE** or other DML, the agent will:
 3. Only execute if you answer `y`.
 
 ### 4. Files
-
+- `web_app.py` – FASTAPI endpoints for ask queries and approve for DML.
 - `main.py` – CLI entrypoint and run loop with human‑in‑the‑loop handling.
 - `graph.py` – LangGraph `StateGraph` definition, multi‑agent nodes, and memory.
 - `db.py` – MySQL connection and query helpers.
 - `requirements.txt` – Python dependencies.
 
-### 5. Switching to persistent memory (optional)
+### 5. Run as FAST API backend app
+
+`
+uvicorn web_app:app --reload
+`
+
+Swagger UI   
+Open in browser
+http://127.0.0.1:8000/
+
+### 6. Switching to persistent memory (optional)
 
 By default, the graph uses in‑memory checkpoints.  
 To persist state, install the SQLite checkpointer and swap the saver:
@@ -79,7 +89,7 @@ checkpointer = SqliteSaver.from_conn_string(\"sqlite:///memory.db\")
 app = graph.compile(checkpointer=checkpointer)
 ```
 
-### 6. LangSmith integration
+### 7. LangSmith integration
 
 With `LANGCHAIN_TRACING_V2=true` and `LANGSMITH_API_KEY` set, all LLM/tool calls made via LangChain + LangGraph will be traced to your LangSmith project (`LANGSMITH_PROJECT`).  
 You can then:
